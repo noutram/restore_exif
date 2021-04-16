@@ -1,0 +1,5 @@
+*.JPG
+*.o
+*.json
+!launch.json
+!tasks.json
