@@ -1,9 +1,18 @@
 #include "stdio.h"
 #include <iostream>
 #include <fstream>
-using namespace std;
+#include "rapidjson/document.h"
 
-#define VERBOSE
+using namespace std;
+using namespace rapidjson;
+
+// Depends on rapidjson-dev
+// Credit to https://rapidjson.org 
+
+void printChildren(rapidjson::Value& obj);
+
+//#define VERBOSE
+
 int main(int argc, char* argv[])
 {
     #ifdef VERBOSE
@@ -26,7 +35,7 @@ int main(int argc, char* argv[])
 
     //Name of JSON file
     fnjpg = fn + ".json";
-
+https://rapidjson.org
     #ifdef VERBOSE
     cout << "Processing " << fn << " using " << fnjpg << endl;
     #endif
@@ -36,9 +45,45 @@ int main(int argc, char* argv[])
     ifstream ip;
     ip.open(fnjpg);
     if (!ip) {
-        
+        cout << "Cannot find corresponding JSON file " << fnjpg << endl;
         return -1;
     }
 
+    //TBD - Read JSON file
+    string ln;
+    while (getline(ip, ln)) {
+        // Append the text from the file
+        jsonString += ln;
+    }   
+    #ifdef VERBOSE
+    cout << jsonString << endl;
+    #endif    
+    
+     //Done with the JSON file
+    ip.close();
+
+    //Parse JSON
+    Document doc;
+    doc.Parse(jsonString.c_str());
+
+    //Get the photoTakenTime
+    rapidjson::Value& v = doc["photoTakenTime"];
+    string timeStampString = v["timestamp"].GetString();
+    string timeFormatted = v["formatted"].GetString();
+    cout << timeFormatted << endl;
+
+    #ifdef VERBOSE
+    printChildren(v);
+    #endif   
+
     return 0;
+}
+
+void printChildren(rapidjson::Value& obj)
+{
+    static const char* kTypeNames[] = { "Null", "False", "True", "Object", "Array", "String", "Number" };
+    for (Value::ConstMemberIterator itr = obj.MemberBegin(); itr != obj.MemberEnd(); ++itr)
+    {
+        printf("Type of member %s is %s\n", itr->name.GetString(), kTypeNames[itr->value.GetType()]);
+    }
 }
