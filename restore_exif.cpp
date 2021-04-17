@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
     //Name of JSON file
     fnjpg = fn + ".json";
-https://rapidjson.org
+
     #ifdef VERBOSE
     cout << "Processing " << fn << " using " << fnjpg << endl;
     #endif
@@ -66,11 +66,20 @@ https://rapidjson.org
     Document doc;
     doc.Parse(jsonString.c_str());
 
+    //Find best timestamp
+    //TBD
+
     //Get the photoTakenTime
     rapidjson::Value& v = doc["photoTakenTime"];
     string timeStampString = v["timestamp"].GetString();
     string timeFormatted = v["formatted"].GetString();
     cout << timeFormatted << endl;
+    cout << "@" << timeStampString << endl;
+    
+    //Perform timestamp fix
+    string cmd = "touch --date=@" + timeStampString + " " + fn;
+    cout << cmd << endl;
+    system(cmd.c_str());
 
     #ifdef VERBOSE
     printChildren(v);

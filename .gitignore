@@ -3,3 +3,4 @@
 *.json
 !launch.json
 !tasks.json
+restore_exif
