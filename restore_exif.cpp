@@ -67,7 +67,10 @@ int main(int argc, char* argv[])
     doc.Parse(jsonString.c_str());
 
     //Find best timestamp
-    //TBD
+    string tag;
+    if (!doc.HasMember(tag.c_str())) {
+        return 0; 
+    }
 
     //Get the photoTakenTime
     rapidjson::Value& v = doc["photoTakenTime"];
