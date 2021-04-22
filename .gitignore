@@ -4,3 +4,4 @@
 !launch.json
 !tasks.json
 restore_exif
+restore_exif.log
