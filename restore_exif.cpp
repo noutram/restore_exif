@@ -26,8 +26,9 @@ int main(int argc, char* argv[])
     #ifdef VERBOSE
     cout << "restore_exif " << argc << " parameters\n";
     #endif
+    dt[strlen(dt)-1]=0;
     cout << "Job Started " << dt;
-    log << "Job started " << gmtm->tm_hour << ":" << gmtm->tm_min << ":" << gmtm->tm_sec << " " << gmtm->tm_mday << "/" << gmtm->tm_mon << "/" << gmtm->tm_year << ",";
+    log << "Job started " << dt;
 
     //Base filename
     string fn;
