@@ -21,13 +21,14 @@ int main(int argc, char* argv[])
     time_t now = time(0);
     tm* gmtm = gmtime(&now);
     char *dt = asctime(gmtm);
+    dt[strlen(dt)-1]=0;             //remove newline \n
 
     ofstream log("restore_exif.log",ofstream::out | ofstream::app);
     #ifdef VERBOSE
     cout << "restore_exif " << argc << " parameters\n";
     #endif
-    dt[strlen(dt)-1]=0;
-    cout << "Job Started " << dt;
+
+    //Start logging
     log << "Job started " << dt;
 
     //Base filename
@@ -42,7 +43,6 @@ int main(int argc, char* argv[])
         //argv[1] is the filename
         fn = string(argv[1]);
     }
-
 
     //Name of JSON file
     fnjpg = fn + ".json";
@@ -83,7 +83,9 @@ int main(int argc, char* argv[])
     //Find best timestamp
     string tag = preferredTag(doc);
     if (tag == "") {
+        #ifdef VERBOSE
         cout << "No suitable JSON tag for " << fnjpg << endl;
+        #endif
         log << ",No JSON timestamp was found" <<  endl;
         log.close();
         return 0; 
@@ -93,13 +95,18 @@ int main(int argc, char* argv[])
     rapidjson::Value& v = doc["photoTakenTime"];
     string timeStampString = v["timestamp"].GetString();
     string timeFormatted = v["formatted"].GetString();
+    #ifdef VERBOSE
     cout << timeFormatted << endl;
     cout << "@" << timeStampString << endl;
+    #endif
     log << "," << timeStampString << "," << timeFormatted; 
         
     //Perform timestamp fix
     string cmd = "touch --date=@" + timeStampString + " " + fn;
+    #ifdef VERBOSE
     cout << cmd << endl;
+    #endif
+    
     int res = system(cmd.c_str());
     if (res != 0) {
         log << ",Failed to touch file" << endl;
