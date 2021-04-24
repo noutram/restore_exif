@@ -34,6 +34,7 @@ int main(int argc, char* argv[])
     //Base filename
     string fn;
     string fnjpg;
+    string jsonString;
 
     //Has a filename been passed as a parameter?
     if (argc < 2) {
@@ -44,24 +45,24 @@ int main(int argc, char* argv[])
         fn = string(argv[1]);
     }
 
-    //Name of JSON file
-    fnjpg = fn + ".json";
-
+    //Open JSON File and parse
+    fnjpg = fn + ".json";   
+    ifstream ip;
+    ip.open(fnjpg);
+    if (!ip) {
+        fnjpg = fn + ".JSON";
+        ip.open(fnjpg);
+        if (!ip) {
+            cout << "Cannot find corresponding JSON file " << fnjpg << endl;
+            log << ",No JSON file found" << endl;
+            log.close();
+            return -1;
+        }
+    }
     #ifdef VERBOSE
     cout << "Processing " << fn << " using " << fnjpg << endl;
     #endif
     log << "," << fn << "," << fnjpg;
-
-    //Open JSON File and parse
-    string jsonString;
-    ifstream ip;
-    ip.open(fnjpg);
-    if (!ip) {
-        cout << "Cannot find corresponding JSON file " << fnjpg << endl;
-        log << ",No JSON file found" << endl;
-        log.close();
-        return -1;
-    }
 
     //Read JSON file
     string ln;
