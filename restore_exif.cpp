@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
     log << "," << timeStampString << "," << timeFormatted; 
         
     //Perform timestamp fix
-    string cmd = "touch --date=@" + timeStampString + " " + fn;
+    string cmd = "touch --date=@" + timeStampString + " \"" + fn + "\"";
     #ifdef VERBOSE
     cout << cmd << endl;
     #endif
